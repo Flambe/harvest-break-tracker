@@ -5,11 +5,7 @@ const break_projects = {
 
 const Harvest = require('harvest'),
     moment = require('moment'),
-    harvest = new Harvest({
-        subdomain: '',
-        email: '',
-        password: ''
-    }),
+    harvest = new Harvest(require('./config')),
     TimeTracking = harvest.TimeTracking;
 
 let loop = [],

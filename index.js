@@ -1,4 +1,9 @@
-let Harvest = require('harvest'),
+const break_projects = {
+    Break: null,
+    'Non-Project Time': 'Education'
+};
+
+const Harvest = require('harvest'),
     moment = require('moment'),
     harvest = new Harvest({
         subdomain: '',
@@ -17,7 +22,7 @@ console.log('Getting times...');
 for (let i of Array(7).keys()) {
     loop.push(daily(today.day(i + 1).toDate()).then(tasks => {
         for (let task of tasks.day_entries) {
-            if ('Break' === task.project) {
+            if (isBreakProject(task)) {
                 breaks += task.hours;
             } else {
                 time += task.hours;
@@ -49,4 +54,30 @@ function convertTime(raw) {
         minutes = Math.round(raw_minutes * 60);
 
     return `${time} hour${time === 1 ? '' : 's'}, ${minutes} minute${minutes === 1 ? '' : 's'}`;
+}
+
+function isBreakProject(task) {
+    for (let key of Object.keys(break_projects)) {
+        if (task.project !== key) {
+            continue;
+        }
+
+        let tasks = break_projects[key];
+
+        if (!tasks) {
+            return true;
+        }
+
+        if (!Array.isArray(tasks)) {
+            tasks = [tasks];
+        }
+
+        for (let t of tasks) {
+            if (t === task.task) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }

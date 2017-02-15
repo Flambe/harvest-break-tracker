@@ -11,25 +11,42 @@ const Harvest = require('harvest'),
 let loop = [],
     today = moment(),
     breaks = 0,
-    time = 0;
+    time = 0,
+    time_today = {
+        breaks: 0,
+        time: 0
+    };
 
 console.log('Getting times...');
 
 for (let i of Array(7).keys()) {
-    loop.push(daily(today.day(i + 1).toDate()).then(tasks => {
+    let currentDay = today.day(i + 1),
+        isToday = currentDay.isSame(moment(), 'd');
+
+    loop.push(daily(currentDay.toDate()).then(tasks => {
         for (let task of tasks.day_entries) {
             if (isBreakProject(task)) {
                 breaks += task.hours;
+                if (isToday) {
+                    time_today.breaks += task.hours;
+                }
             } else {
                 time += task.hours;
+                if (isToday) {
+                    time_today.time += task.hours;
+                }
             }
         }
     }));
 }
 
 Promise.all(loop).then(() => {
+    console.log('\nWeek:');
     console.log('Break:', convertTime(breaks));
     console.log('Time:', convertTime(time));
+    console.log('\nToday:');
+    console.log('Break:', convertTime(time_today.breaks));
+    console.log('Time:', convertTime(time_today.time));
 }).catch(err => {
     console.error(err);
     console.error('Something went wrong, did you enter your harvest details?');
@@ -37,7 +54,9 @@ Promise.all(loop).then(() => {
 
 function daily(date) {
     return new Promise((resolve, reject) => {
-        TimeTracking.daily({date}, (err, tasks) => {
+        TimeTracking.daily({
+            date
+        }, (err, tasks) => {
             if (err) return reject(err);
             resolve(tasks);
         });

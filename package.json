@@ -11,5 +11,11 @@
   "dependencies": {
     "harvest": "^0.2.0",
     "moment": "^2.17.1"
+  },
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "bin": {
+    "hbt": "index.js"
   }
 }

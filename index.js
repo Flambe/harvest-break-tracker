@@ -1,3 +1,4 @@
+#! /usr/bin/env node
 const break_projects = {
     Break: null,
     'Non-Project Time': 'Education'

@@ -20,6 +20,10 @@ let loop = [],
 
 console.log('Getting times...');
 
+if (today.day() === 0) {
+    today.day(-7);
+}
+
 for (let i of Array(7).keys()) {
     let currentDay = today.day(i + 1),
         isToday = currentDay.isSame(moment(), 'd');

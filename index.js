@@ -1,35 +1,40 @@
 #! /usr/bin/env node
+
 const break_projects = {
     Break: null,
     'Non-Project Time': 'Education'
 };
 
 const Harvest = require('harvest'),
-    moment = require('moment'),
-    harvest = new Harvest(require('./config')),
-    TimeTracking = harvest.TimeTracking;
+      moment = require('moment'),
+      harvest = new Harvest(require('./config')),
+      TimeTracking = harvest.TimeTracking,
+      AsciiTable = require('ascii-table');
 
 let loop = [],
     today = moment(),
     breaks = 0,
     time = 0,
+    total = 0,
     time_today = {
         breaks: 0,
-        time: 0
+        time: 0,
+        total: 0
     };
 
-console.log('Getting times...');
-
-if (today.day() === 0) {
-    today.day(-7);
-}
+startofweek = today.startOf('isoweek');
 
 for (let i of Array(7).keys()) {
-    let currentDay = today.day(i + 1),
+    let currentDay = startofweek.day(i + 1),
         isToday = currentDay.isSame(moment(), 'd');
 
     loop.push(daily(currentDay.toDate()).then(tasks => {
         for (let task of tasks.day_entries) {
+            if (isToday) {
+                time_today.total += task.hours;
+            }
+            total += task.hours;
+
             if (isBreakProject(task)) {
                 breaks += task.hours;
                 if (isToday) {
@@ -46,16 +51,19 @@ for (let i of Array(7).keys()) {
 }
 
 Promise.all(loop).then(() => {
-    console.log('\nWeek:');
-    console.log('Break:', convertTime(breaks));
-    console.log('Time:', convertTime(time));
-    console.log('\nToday:');
-    console.log('Break:', convertTime(time_today.breaks));
-    console.log('Time:', convertTime(time_today.time));
+    display(breaks, time, time_today.breaks, time_today.time);
 }).catch(err => {
     console.error(err);
     console.error('Something went wrong, did you enter your harvest details?');
 });
+
+function display(breaks, time, weekly_breaks, weekly_time) {
+    var table = new AsciiTable();
+    table.setHeading('', 'Day', 'Week');
+    table.addRow('Break', formatDuration(breaks), formatDuration(weekly_breaks))
+        .addRow('Time', formatDuration(time), formatDuration(time));
+    console.log(table.toString());
+}
 
 function daily(date) {
     return new Promise((resolve, reject) => {
@@ -68,12 +76,19 @@ function daily(date) {
     });
 }
 
-function convertTime(raw) {
+function formatDuration(raw_duration) {
+    let converted = getHoursMins(raw_duration),
+        hours = converted.hours,
+        minutes = converted.minutes;
+
+    return `${hours < 10 ? '0' : ''}${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
+}
+
+function getHoursMins(raw) {
     let time = Math.floor(raw),
         raw_minutes = raw % 1,
         minutes = Math.round(raw_minutes * 60);
-
-    return `${time} hour${time === 1 ? '' : 's'}, ${minutes} minute${minutes === 1 ? '' : 's'}`;
+    return {hours: time, minutes, minutes};
 }
 
 function isBreakProject(task) {

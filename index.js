@@ -51,7 +51,7 @@ for (let i of Array(7).keys()) {
 }
 
 Promise.all(loop).then(() => {
-    display(breaks, time, time_today.breaks, time_today.time);
+    display(time_today.breaks, time_today.time, breaks, time);
 }).catch(err => {
     console.error(err);
     console.error('Something went wrong, did you enter your harvest details?');
@@ -61,7 +61,7 @@ function display(breaks, time, weekly_breaks, weekly_time) {
     var table = new AsciiTable();
     table.setHeading('', 'Day', 'Week');
     table.addRow('Break', formatDuration(breaks), formatDuration(weekly_breaks))
-        .addRow('Time', formatDuration(time), formatDuration(time));
+        .addRow('Time', formatDuration(time), formatDuration(weekly_time));
     console.log(table.toString());
 }
 

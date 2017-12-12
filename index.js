@@ -20,13 +20,20 @@ let loop = [],
         breaks: 0,
         time: 0,
         total: 0
-    };
+    },
+    runningExpected = 0;
 
 startofweek = today.startOf('isoweek');
 
 for (let i of Array(7).keys()) {
     let currentDay = startofweek.day(i + 1),
-        isToday = currentDay.isSame(moment(), 'd');
+        now = moment(),
+        isBefore = currentDay.isBefore(now, 'd'),
+        isToday = currentDay.isSame(now, 'd');
+
+    if (isBefore || isToday) {
+        runningExpected += 8;
+    }
 
     loop.push(daily(currentDay.toDate()).then(tasks => {
         for (let task of tasks.day_entries) {
@@ -58,10 +65,19 @@ Promise.all(loop).then(() => {
 });
 
 function display(breaks, time, weekly_breaks, weekly_time) {
-    var table = new AsciiTable();
+    let table = new AsciiTable(),
+        remaining = runningExpected - weekly_time;
+
     table.setHeading('', 'Day', 'Week');
     table.addRow('Break', formatDuration(breaks), formatDuration(weekly_breaks))
-        .addRow('Time', formatDuration(time), formatDuration(weekly_time));
+         .addRow('Time', formatDuration(time), formatDuration(weekly_time))
+         .addRow('','','');
+
+    if (remaining > 0) {
+        table.addRow('Left', formatDuration(remaining), '')
+    } else {
+        table.addRow('Over', formatDuration(remaining * -1), '')
+    }
     console.log(table.toString());
 }
 

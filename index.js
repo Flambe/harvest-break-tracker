@@ -75,8 +75,10 @@ function display(breaks, time, weekly_breaks, weekly_time) {
 
     if (remaining > 0) {
         table.addRow('Left', formatDuration(remaining), '')
+        table.addRow('End', moment().add(remaining, 'hours').format('HH:mm'), '');
     } else {
         table.addRow('Over', formatDuration(remaining * -1), '')
+        table.addRow('End', moment().subtract(remaining, 'hours').format('HH:mm'), '');
     }
     console.log(table.toString());
 }

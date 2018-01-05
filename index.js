@@ -9,7 +9,8 @@ const Harvest = require('harvest'),
       moment = require('moment'),
       harvest = new Harvest(require('./config')),
       TimeTracking = harvest.TimeTracking,
-      AsciiTable = require('ascii-table');
+      table = require("table"),
+      colors = require('colors');
 
 let loop = [],
     today = moment(),
@@ -65,20 +66,26 @@ Promise.all(loop).then(() => {
 });
 
 function display(breaks, time, weekly_breaks, weekly_time) {
-    let table = new AsciiTable(),
+    let data = [],
+        options = {
+            drawHorizontalLine: (index, size) => {
+                return index === 0 || index === 1 || index === size - 1 || index === size;
+            }
+        },
         remaining = runningExpected - weekly_time;
 
-    table.setHeading('', 'Day', 'Week');
-    table.addRow('Break', formatDuration(breaks), formatDuration(weekly_breaks))
-         .addRow('Time', formatDuration(time), formatDuration(weekly_time))
-         .addRow('','','');
+    data.push(['', 'Day'.bold, 'Week'.bold]);
+    data.push(['Break', formatDuration(breaks), formatDuration(weekly_breaks)]);
+    data.push(['Time', formatDuration(time), formatDuration(weekly_time)]);
 
     if (remaining > 0) {
-        table.addRow('Left', formatDuration(remaining), '')
+        data.push(['End', moment().add(remaining, 'hours').format('HH:mm'), '']);
     } else {
-        table.addRow('Over', formatDuration(remaining * -1), '')
+        data.push(['', "+ " + formatDuration(remaining * -1).green, '']);
     }
-    console.log(table.toString());
+
+    let output = table.table(data, options);
+    console.log(output)
 }
 
 function daily(date) {

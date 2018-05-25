@@ -18,6 +18,6 @@
     "node": ">=7.0.0"
   },
   "bin": {
-    "hbt": "index.js"
+    "hbt": "./index.js"
   }
 }

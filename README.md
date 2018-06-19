@@ -5,5 +5,5 @@ To install:
 
 TODO: use the environment to get config values
 
-To run, open termianl and type
+To run, open terminal and type
 ``` hbt```

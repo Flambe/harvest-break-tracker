@@ -15,7 +15,8 @@ const Harvest = require('harvest'),
 let loop = [],
     today = moment(),
     breaks = 0,
-    time = 0,
+    time_to_now = 0,
+    total_time = 0,
     total = 0,
     time_today = {
         breaks: 0,
@@ -49,7 +50,10 @@ for (let i of Array(7).keys()) {
                     time_today.breaks += task.hours;
                 }
             } else {
-                time += task.hours;
+                total_time += task.hours;
+                if (isBefore || isToday) {
+                    time_to_now += task.hours;
+                }
                 if (isToday) {
                     time_today.time += task.hours;
                 }
@@ -59,20 +63,20 @@ for (let i of Array(7).keys()) {
 }
 
 Promise.all(loop).then(() => {
-    display(time_today.breaks, time_today.time, breaks, time);
+    display(time_today.breaks, time_today.time, breaks, time_to_now, total_time);
 }).catch(err => {
     console.error(err);
     console.error('Something went wrong, did you enter your harvest details?');
 });
 
-function display(breaks, time, weekly_breaks, weekly_time) {
+function display(breaks, time, weekly_breaks, time_to_now, weekly_time) {
     let data = [],
         options = {
             drawHorizontalLine: (index, size) => {
                 return index === 0 || index === 1 || index === size - 1 || index === size;
             }
         },
-        remaining = runningExpected - weekly_time;
+        remaining = runningExpected - time_to_now;
 
     data.push(['', 'Day'.bold, 'Week'.bold]);
     data.push(['Break', formatDuration(breaks), formatDuration(weekly_breaks)]);

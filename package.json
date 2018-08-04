@@ -1,32 +1,35 @@
 {
-  "name": "@steveaxtmann/harvest-break-tracker",
-  "version": "0.0.3",
-  "description": "See harvest time for the week without breaks",
-  "main": "src/index",
-  "scripts": {
-    "start": "ts-node src/index.ts",
-    "build": "tsc --rootDir src --outDir dist",
-    "pub": "npm run build && npm publish --access public"
-  },
-  "author": "Steve Axtmann",
-  "license": "ISC",
-  "dependencies": {
-    "@types/dotenv": "^4.0.3",
-    "colors": "^1.1.2",
-    "data-store": "^3.0.3",
-    "dotenv": "^6.0.0",
-    "harvest-v2": "^1.2.0",
-    "inquirer": "^6.0.0",
-    "moment": "^2.17.1",
-    "request": "^2.87.0",
-    "table": "^4.0.2",
-    "ts-node": "^7.0.0",
-    "typescript": "^3.0.1"
-  },
-  "engines": {
-    "node": ">=8.0.0"
-  },
-  "bin": {
-    "hbt": "./dist/index.js"
-  }
+    "name": "@steveaxtmann/harvest-break-tracker",
+    "version": "0.0.3",
+    "description": "See harvest time for the week without breaks",
+    "main": "src/index",
+    "homepage": "https://github.com/Flambe/harvest-break-tracker",
+    "repository": "github:Flambe/harvest-break-tracker",
+    "bugs": "https://github.com/Flambe/harvest-break-tracker/issues",
+    "scripts": {
+        "start": "ts-node src/index.ts",
+        "build": "tsc --rootDir src --outDir dist",
+        "pub": "npm run build && npm publish --access public"
+    },
+    "author": "Steve Axtmann",
+    "license": "ISC",
+    "dependencies": {
+        "@types/dotenv": "^4.0.3",
+        "colors": "^1.1.2",
+        "data-store": "^3.0.3",
+        "dotenv": "^6.0.0",
+        "harvest-v2": "^1.2.0",
+        "inquirer": "^6.0.0",
+        "moment": "^2.17.1",
+        "request": "^2.87.0",
+        "table": "^4.0.2",
+        "ts-node": "^7.0.0",
+        "typescript": "^3.0.1"
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    },
+    "bin": {
+        "hbt": "./dist/index.js"
+    }
 }

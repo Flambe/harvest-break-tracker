@@ -1,23 +1,32 @@
 {
-  "name": "harvest-break-tracker",
-  "version": "1.0.0",
+  "name": "@steveaxtmann/harvest-break-tracker",
+  "version": "0.0.0",
   "description": "See harvest time for the week without breaks",
-  "main": "index.js",
+  "main": "src/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "ts-node src/index.ts",
+    "build": "tsc --outDir dist",
+    "publish": "npm run build && npm publish"
   },
   "author": "Steve Axtmann",
   "license": "ISC",
   "dependencies": {
+    "@types/dotenv": "^4.0.3",
     "colors": "^1.1.2",
-    "harvest": "^0.2.0",
+    "data-store": "^3.0.3",
+    "dotenv": "^6.0.0",
+    "harvest-v2": "^1.2.0",
+    "inquirer": "^6.0.0",
     "moment": "^2.17.1",
-    "table": "^4.0.2"
+    "request": "^2.87.0",
+    "table": "^4.0.2",
+    "ts-node": "^7.0.0",
+    "typescript": "^3.0.1"
   },
   "engines": {
-    "node": ">=7.0.0"
+    "node": ">=8.0.0"
   },
   "bin": {
-    "hbt": "./index.js"
+    "hbt": "./dist/index.js"
   }
 }

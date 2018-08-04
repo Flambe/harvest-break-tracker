@@ -1,3 +1,4 @@
 src/
+!dist/
 config.js
 index.js

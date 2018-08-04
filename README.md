@@ -2,7 +2,7 @@
 
 To install:
 
-``` npm i -g @steveaxtmann/harvest-break-timer```
+```npm i -g @steveaxtmann/harvest-break-tracker```
 
 Then you can run it with:
 

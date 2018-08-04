@@ -5,7 +5,7 @@
   "main": "src/index",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "build": "tsc --outDir dist",
+    "build": "tsc --rootDir src --outDir dist",
     "pub": "npm run build && npm publish --access public"
   },
   "author": "Steve Axtmann",

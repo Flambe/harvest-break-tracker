@@ -3,7 +3,7 @@ import {Duration} from 'moment';
 
 const breaks = {
     Break: null,
-    'Non-Project Time': 'German'
+    'Non-Project Time': ['German']
 };
 
 export default class Day {
@@ -21,7 +21,7 @@ export default class Day {
 
     public addEntry(time: any): void {
         if (breaks[time.project.name] !== undefined) {
-            if (!breaks[time.project.name] || breaks[time.project.name] === time.task.name) {
+            if (!breaks[time.project.name] || breaks[time.project.name].indexOf(time.task.name) > -1) {
                 this.incrementBreak(time.hours);
 
                 return;

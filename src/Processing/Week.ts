@@ -29,6 +29,13 @@ export default class Week {
         return this.calculateTotals();
     }
 
+    public async getTimeLeft(): Promise<moment.Duration> {
+        const times = await this.getTimes();
+        const week = moment.duration(40, 'hours');
+
+        return week.subtract(times.work);
+    }
+
     private calculateTotals(): { work: Duration, break: Duration } {
         return this.days.reduce((previous, current) => {
             previous.work.add(current.work, 'hours');

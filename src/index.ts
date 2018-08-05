@@ -24,7 +24,7 @@ import updateCheck from './Utils/updateCheck';
     const left = await week.getTimeLeft();
     const exact = moment().add(left).format('HH:mm');
 
-    console.log(`${left.humanize(true)} (${exact})`);
+    console.log(`Finish: ${left.humanize(true)} (${exact})`);
 })();
 
 function convertTime(inp: Duration) {

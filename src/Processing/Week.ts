@@ -8,7 +8,14 @@ export default class Week {
     private end: moment.Moment = moment();
 
     set weeksInPast(value: number) {
-        this.start = moment().subtract(value, 'weeks').startOf('isoWeek');
+        let week = moment().subtract(value, 'weeks');
+
+        this.start = week.clone().startOf('isoWeek');
+        this.end = week.clone().endOf('isoWeek');
+
+        if (this.end.isAfter(moment())) {
+            this.end = moment();
+        }
     }
 
     public async getTimes(): Promise<{ work: Duration, break: Duration }> {
@@ -31,7 +38,8 @@ export default class Week {
 
     public async getTimeLeft(): Promise<moment.Duration> {
         const times = await this.getTimes();
-        const week = moment.duration(40, 'hours');
+        const hoursTotal = this.days.length * 8;
+        const week = moment.duration(hoursTotal > 40 ? 40 : hoursTotal, 'hours');
 
         return week.subtract(times.work);
     }

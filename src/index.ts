@@ -3,8 +3,11 @@
 import {Duration} from 'moment';
 import Week from './Processing/Week';
 import Config from './Utils/Config';
+import updateCheck from './Utils/updateCheck';
 
 (async () => {
+    updateCheck();
+
     await Config.get();
 
     const week: Week = new Week();

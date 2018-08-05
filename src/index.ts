@@ -7,42 +7,42 @@ import updateCheck from './Utils/updateCheck';
 import program from 'commander';
 import logUpdate from 'log-update';
 
-program.version(require('../package.json').version)
-    .option('-w, --weeks <n>', 'Weeks to include', parseInt, 0)
-    .option('-r, --refresh', 'Refresh every minute')
-    .parse(process.argv);
+(async () => {
+    program.version(require('../package.json').version)
+        .option('-w, --weeks <n>', 'Weeks to include', parseInt, 0)
+        .option('-r, --refresh', 'Refresh every minute')
+        .parse(process.argv);
 
-updateCheck();
-
-const processTime = async () => {
-    let weeksToProcess: number = program.weeks;
-    const weeks: Week[] = [];
-
-    while (weeksToProcess >= 0) {
-        const week: Week = new Week();
-        week.weeksInPast = weeksToProcess--;
-
-        weeks.push(week);
-    }
+    updateCheck();
 
     await Config.get();
 
-    const remaining: moment.Duration = moment.duration();
+    const processTime = async () => {
+        let weeksToProcess: number = program.weeks;
+        const weeks: Week[] = [];
 
-    for (const key in weeks) {
-        const week: Week = weeks[key];
-        remaining.add(await week.getTimeLeft());
-    }
+        while (weeksToProcess >= 0) {
+            const week: Week = new Week();
+            week.weeksInPast = weeksToProcess--;
 
-    const exact: string = moment().add(remaining).format('HH:mm');
+            weeks.push(week);
+        }
 
-    logUpdate(`Finish: ${remaining.humanize(true)} (${exact})`);
-};
+        const remaining: moment.Duration = moment.duration();
 
-(async () => {
+        for (const key in weeks) {
+            const week: Week = weeks[key];
+            remaining.add(await week.getTimeLeft());
+        }
+
+        const exact: string = moment().add(remaining).format('HH:mm');
+
+        logUpdate(`Finish: ${remaining.humanize(true)} (${exact})`);
+    };
+
     await processTime();
-})();
 
-if (program.refresh) {
-    setInterval(processTime, 60000);
-}
+    if (program.refresh) {
+        setInterval(processTime, 60000);
+    }
+})();

@@ -9,7 +9,7 @@
     "scripts": {
         "start": "ts-node src/index.ts",
         "build": "tsc --rootDir src --outDir dist",
-        "pub": "npm run build && npm publish --access public"
+        "pub": "npm version patch && npm run build && npm publish --access public"
     },
     "author": "Steve Axtmann",
     "license": "ISC",

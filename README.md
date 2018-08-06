@@ -2,7 +2,9 @@
 
 To install:
 
-```npm i -g @steveaxtmann/harvest-break-tracker```
+1. Ensure that you have NodeJS installed (https://github.com/creationix/nvm)
+
+2. Run: ```npm i -g @steveaxtmann/harvest-break-tracker```
 
 Then you can run it with:
 

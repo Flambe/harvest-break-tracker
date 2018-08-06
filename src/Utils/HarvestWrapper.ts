@@ -1,5 +1,6 @@
 import Harvest from 'harvest-v2';
 import * as moment from 'moment';
+import Utils from './Utils';
 
 export type HarvestConfig = { account_ID: number, access_token: string, user_agent: string };
 
@@ -18,6 +19,20 @@ export default class HarvestWrapper {
             from: from.toISOString(),
             to: to.toISOString()
         });
+    }
+
+    public static async getRunning(): Promise<'work' | 'break' | false> {
+        const running = await HarvestWrapper._harvest.timeEntries.listBy({
+            user_id: HarvestWrapper._user_id,
+            is_running: true
+        });
+
+        if (!running.time_entries.length) {
+            return false;
+        }
+
+
+        return Utils.isBreak(running.time_entries[0]) ? 'break' : 'work';
     }
 
     private static async getUserId() {

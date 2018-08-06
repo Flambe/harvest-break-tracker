@@ -7,6 +7,7 @@ import updateCheck from './Utils/updateCheck';
 import program from 'commander';
 import logUpdate from 'log-update';
 import ora from 'ora';
+import HarvestWrapper from './Utils/HarvestWrapper';
 
 (async () => {
     program.version(require('../package.json').version)
@@ -42,7 +43,14 @@ import ora from 'ora';
 
         spinner.stop();
 
-        logUpdate(`Finish: ${remaining.humanize(true)} (${exact})`);
+        let string = `Finish: ${remaining.humanize(true)} (${exact})`;
+        const running = await HarvestWrapper.getRunning();
+
+        if (running) {
+            string += ` * ${running} timer running`;
+        }
+
+        logUpdate(string);
     };
 
     await processTime();

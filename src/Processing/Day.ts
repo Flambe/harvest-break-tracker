@@ -1,10 +1,6 @@
 import * as moment from 'moment';
 import {Duration} from 'moment';
-
-const breaks = {
-    Break: null,
-    'Non-Project Time': ['German']
-};
+import Utils from '../Utils/Utils';
 
 export default class Day {
     private _break: Duration = moment.duration(0, 'hours');
@@ -20,14 +16,11 @@ export default class Day {
     }
 
     public addEntry(time: any): void {
-        if (breaks[time.project.name] !== undefined) {
-            if (!breaks[time.project.name] || breaks[time.project.name].indexOf(time.task.name) > -1) {
-                this.incrementBreak(time.hours);
-
-                return;
-            }
+        if (Utils.isBreak(time)) {
+            this.incrementBreak(time.hours);
+        } else {
+            this.incrementWork(time.hours);
         }
-        this.incrementWork(time.hours);
     }
 
     private incrementWork(value: number) {

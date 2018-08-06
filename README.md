@@ -23,3 +23,12 @@ Include the n amount of previous weeks when processing time left
 ```-r``` or ```--refresh``` (defaults to off)
 
 Auto update the time every minute
+
+
+#### Display as a table
+
+```-t``` or ```--table``` (defaults to off)
+
+Display the current week in table form. The bottom row will include all weeks specified with ```-w```
+
+```*``` on a row indicates that a timer for that field is running

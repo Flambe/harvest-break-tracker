@@ -6,6 +6,7 @@ export default class Week {
     private days: Day[] = [];
     private start: moment.Moment = moment().startOf('isoWeek');
     private end: moment.Moment = moment();
+    private times;
 
     set weeksInPast(value: number) {
         let week = moment().subtract(value, 'weeks');
@@ -18,7 +19,15 @@ export default class Week {
         }
     }
 
+    get lastDay() {
+        return [...this.days].pop();
+    }
+
     public async getTimes(): Promise<{ work: Duration, break: Duration }> {
+        if (this.times) {
+            return this.times;
+        }
+
         const current: moment.Moment = this.start.clone();
         const entries = await HarvestWrapper.getEntries(this.start, this.end);
 
@@ -33,7 +42,11 @@ export default class Week {
             current.add(1, 'day');
         } while (current.isSameOrBefore(this.end));
 
-        return this.calculateTotals();
+        const times = this.calculateTotals();
+
+        this.times = times;
+
+        return times;
     }
 
     public async getTimeLeft(): Promise<moment.Duration> {

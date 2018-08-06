@@ -6,12 +6,15 @@ import Config from './Utils/Config';
 import updateCheck from './Utils/updateCheck';
 import program from 'commander';
 import logUpdate from 'log-update';
+import ora from 'ora';
 
 (async () => {
     program.version(require('../package.json').version)
         .option('-w, --weeks <n>', 'Weeks to include', parseInt, 0)
         .option('-r, --refresh', 'Refresh every minute')
         .parse(process.argv);
+
+    const spinner = ora().start();
 
     updateCheck();
 
@@ -36,6 +39,8 @@ import logUpdate from 'log-update';
         }
 
         const exact: string = moment().add(remaining).format('HH:mm');
+
+        spinner.stop();
 
         logUpdate(`Finish: ${remaining.humanize(true)} (${exact})`);
     };

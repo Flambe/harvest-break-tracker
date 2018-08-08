@@ -5,7 +5,7 @@ import HarvestWrapper from './HarvestWrapper';
 const store = new Store('harvest');
 
 export default class Config {
-    static async get(): Promise<void> {
+    static async init(): Promise<void> {
         if (store.has('config')) {
             await HarvestWrapper.setHarvestConfig(store.get('config'));
 
@@ -43,5 +43,17 @@ export default class Config {
 
             process.exit(1);
         }
+    }
+
+    static has(key) {
+        return store.has(key);
+    }
+
+    static get(key) {
+        return store.get(key);
+    }
+
+    static set(key, value) {
+        store.set(key, value);
     }
 }

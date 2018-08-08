@@ -1,12 +1,14 @@
 import Day from './Day';
 import moment, {Duration} from 'moment';
 import HarvestWrapper from '../Utils/HarvestWrapper';
+import Config from '../Utils/Config';
 
 export default class Week {
     private days: Day[] = [];
     private start: moment.Moment = moment().startOf('isoWeek');
     private end: moment.Moment = moment();
     private times;
+    private aims: any[] = [];
 
     set weeksInPast(value: number) {
         let week = moment().subtract(value, 'weeks');
@@ -30,13 +32,31 @@ export default class Week {
 
         const current: moment.Moment = this.start.clone();
         const entries = await HarvestWrapper.getEntries(this.start, this.end);
+        this.aims = Config.get('aims').map(aim => {
+            aim.minutes /= 5;
+
+            return aim;
+        });
 
         do {
             const currentDate = current.format('YYYY-MM-DD');
             const day = new Day();
 
             entries.time_entries.filter(time => time.spent_date === currentDate)
-                .map((time) => day.addEntry(time));
+                .map((time) => {
+                    const index = this.aims.findIndex((aim) => {
+                        return time.project.name === aim.project && (!aim.task || time.task.name === aim.task);
+                    });
+
+                    if (index !== -1 && this.aims[index].minutes > 0) {
+                        this.aims[index].minutes -= moment.duration(time.hours, 'hours').asMinutes();
+                        if (this.aims[index].minutes < 0) {
+                            this.aims[index].minutes = 0;
+                        }
+                    }
+
+                    return day.addEntry(time);
+                });
 
             this.days.push(day);
             current.add(1, 'day');
@@ -63,7 +83,10 @@ export default class Week {
             previous.break.add(current.break, 'hours');
 
             return previous;
-        }, {work: moment.duration(), break: moment.duration()});
+        }, {work: moment.duration().subtract(this.getAimsTotal(), 'minutes'), break: moment.duration()});
     }
 
+    private getAimsTotal(): number {
+        return this.aims.reduce((previous, current) => previous + current.minutes, 0);
+    }
 }

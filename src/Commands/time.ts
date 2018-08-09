@@ -13,7 +13,7 @@ export default async () => {
 
     updateCheck();
 
-    await Config.init();
+    await Config.init(spinner);
 
     const processTime = async () => {
         let weeksToProcess: number = program.weeks;

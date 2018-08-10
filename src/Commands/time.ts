@@ -8,6 +8,8 @@ import ora from 'ora';
 import HarvestWrapper from '../Utils/HarvestWrapper';
 import * as table from 'table';
 
+require('colors');
+
 export default async () => {
     const spinner = ora().start();
 

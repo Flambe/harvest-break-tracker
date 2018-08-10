@@ -14,6 +14,7 @@
     "author": "Steve Axtmann",
     "license": "ISC",
     "dependencies": {
+        "@types/colors": "^1.2.1",
         "@types/dotenv": "^4.0.3",
         "@types/ora": "^1.3.4",
         "colors": "^1.1.2",

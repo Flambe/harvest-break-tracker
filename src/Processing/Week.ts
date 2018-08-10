@@ -32,7 +32,7 @@ export default class Week {
 
         const current: moment.Moment = this.start.clone();
         const entries = await HarvestWrapper.getEntries(this.start, this.end);
-        this.aims = Config.get('aims').map(aim => {
+		this.aims = (Config.get('aims') || []).map(aim => {
             aim.minutes /= 5;
 
             return aim;

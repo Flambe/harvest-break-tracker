@@ -5,12 +5,14 @@ import HarvestWrapper from './HarvestWrapper';
 const store = new Store('harvest');
 
 export default class Config {
-    static async init(): Promise<void> {
+    static async init(spinner): Promise<void> {
         if (store.has('config')) {
             await HarvestWrapper.setHarvestConfig(store.get('config'));
 
             return;
         }
+
+        spinner.stop();
 
         console.log('! Couldn\'t find any existing harvest config');
         console.log('1. Go to https://id.getharvest.com/oauth2/access_tokens/new and log in');

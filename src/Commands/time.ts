@@ -8,6 +8,8 @@ import ora from 'ora';
 import HarvestWrapper from '../Utils/HarvestWrapper';
 import * as table from 'table';
 
+require('colors');
+
 export default async () => {
     const spinner = ora().start();
 
@@ -64,14 +66,17 @@ function display(remaining, running) {
 }
 
 function displayTable(remaining, running, currentWeek, today) {
-    const exact: string = moment().add(remaining).format('HH:mm');
+	const exact: string = remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm');
+	const under = remaining > 0;
+	const timeLeft: any = (under ? '' : '+') + convertTime(remaining);
 
-    const tableToDisplay = [
-        ['', 'Day', 'Week'],
-        ['Break' + (running === 'break' ? ' *' : ''), convertTime(today.break), convertTime(currentWeek.break)],
-        ['Work' + (running === 'work' ? ' *' : ''), convertTime(today.work), convertTime(currentWeek.work)],
-        [remaining > 0 ? 'Left' : 'Over', (remaining > 0 ? '' : '+') + convertTime(remaining), exact]
-    ];
+
+	const tableToDisplay = [
+		['', 'Day', 'Week'],
+		['Break' + (running === 'break' ? ' *' : ''), convertTime(today.break), convertTime(currentWeek.break)],
+		['Work' + (running === 'work' ? ' *' : ''), convertTime(today.work), convertTime(currentWeek.work)],
+		[under ? 'Left' : 'Over', under ? timeLeft : timeLeft.green, exact]
+	];
     const options = {
         drawHorizontalLine: (index, size) => {
             return index < 2 || index > size - 2;

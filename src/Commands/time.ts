@@ -1,7 +1,5 @@
 import moment, {Duration} from 'moment';
 import Week from '../Processing/Week';
-import Config from '../Utils/Config';
-import updateCheck from '../Utils/updateCheck';
 import program from 'commander';
 import logUpdate from 'log-update';
 import ora from 'ora';
@@ -12,10 +10,6 @@ require('colors');
 
 export default async () => {
     const spinner = ora().start();
-
-    updateCheck();
-
-    await Config.init(spinner);
 
     const processTime = async () => {
         let weeksToProcess: number = program.weeks;
@@ -66,17 +60,17 @@ function display(remaining, running) {
 }
 
 function displayTable(remaining, running, currentWeek, today) {
-	const exact: string = remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm');
-	const under = remaining > 0;
-	const timeLeft: any = (under ? '' : '+') + convertTime(remaining);
+    const exact: string = remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm');
+    const under = remaining > 0;
+    const timeLeft: any = (under ? '' : '+') + convertTime(remaining);
 
 
-	const tableToDisplay = [
-		['', 'Day', 'Week'],
-		['Break' + (running === 'break' ? ' *' : ''), convertTime(today.break), convertTime(currentWeek.break)],
-		['Work' + (running === 'work' ? ' *' : ''), convertTime(today.work), convertTime(currentWeek.work)],
-		[under ? 'Left' : 'Over', under ? timeLeft : timeLeft.green, exact]
-	];
+    const tableToDisplay = [
+        ['', 'Day', 'Week'],
+        ['Break' + (running === 'break' ? ' *' : ''), convertTime(today.break), convertTime(currentWeek.break)],
+        ['Work' + (running === 'work' ? ' *' : ''), convertTime(today.work), convertTime(currentWeek.work)],
+        [under ? 'Left' : 'Over', under ? timeLeft : timeLeft.green, exact]
+    ];
     const options = {
         drawHorizontalLine: (index, size) => {
             return index < 2 || index > size - 2;

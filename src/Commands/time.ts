@@ -5,6 +5,7 @@ import logUpdate from 'log-update';
 import ora from 'ora';
 import HarvestWrapper from '../Utils/HarvestWrapper';
 import * as table from 'table';
+import Config from '../Utils/Config';
 
 require('colors');
 
@@ -33,7 +34,13 @@ export default async () => {
 
         spinner.stop();
 
-        if (program.table) {
+        let displayAsTable = true;
+
+        if (!program.table && (program.simple || Config.get('display') === 'simple')) {
+            displayAsTable = false;
+        }
+
+        if (displayAsTable) {
             let currentWeek = weeks.pop() || new Week();
             displayTable(remaining, running, await currentWeek.getTimes(), currentWeek.lastDay);
         } else {

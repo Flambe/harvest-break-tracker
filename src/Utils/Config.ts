@@ -1,10 +1,12 @@
 import Store from 'data-store';
 import Init from './Configs/Init';
 import ConfigurationInterface from './Configs/ConfigurationInterface';
+import DefaultDisplay from './Configs/DefaultDisplay';
 
 const store = new Store('harvest');
 const versions: ConfigurationInterface[] = [
-    new Init
+    new Init,
+    new DefaultDisplay
 ];
 
 export default class Config {

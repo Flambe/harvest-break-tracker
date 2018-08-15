@@ -24,11 +24,16 @@ Include the n amount of previous weeks when processing time left
 
 Auto update the time every minute
 
+#### Display the table view
 
-#### Display as a table
-
-```-t``` or ```--table``` (defaults to off)
+```-t``` or ```--table``` (defaults to on)
 
 Display the current week in table form. The bottom row will include all weeks specified with ```-w```
 
 ```*``` on a row indicates that a timer for that field is running
+
+#### Display the simple view
+
+```-s``` or ```--simple``` (defaults to off)
+
+Display the time left in the day

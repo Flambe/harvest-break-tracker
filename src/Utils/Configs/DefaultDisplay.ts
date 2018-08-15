@@ -10,7 +10,7 @@ export default class DefaultDisplay implements ConfigurationInterface {
     async run(): Promise<void> {
         const result = await inquirer.prompt([
             {
-                type: 'input',
+                type: 'list',
                 name: 'display',
                 message: 'Choose how you want to display the output by default',
                 choices: ['table', 'simple'],

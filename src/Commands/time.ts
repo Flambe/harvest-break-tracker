@@ -1,11 +1,12 @@
-import moment, {Duration} from 'moment';
+import moment from 'moment';
 import Week from '../Processing/Week';
 import program from 'commander';
-import logUpdate from 'log-update';
 import ora from 'ora';
 import HarvestWrapper from '../Utils/HarvestWrapper';
-import * as table from 'table';
 import Config from '../Utils/Config';
+import Renderer from '../Renderers/Renderer';
+import SimpleRenderer from '../Renderers/SimpleRenderer';
+import TableRenderer from '../Renderers/TableRenderer';
 
 require('colors');
 
@@ -40,12 +41,18 @@ export default async () => {
             displayAsTable = false;
         }
 
+        let renderer: Renderer;
+
         if (displayAsTable) {
             let currentWeek = weeks.pop() || new Week();
-            displayTable(remaining, running, await currentWeek.getTimes(), currentWeek.lastDay);
+            renderer = new TableRenderer();
+            (<TableRenderer>renderer).times = await currentWeek.getTimes();
+            (<TableRenderer>renderer).lastDay = currentWeek.lastDay;
         } else {
-            display(remaining, running);
+            renderer = new SimpleRenderer();
         }
+
+        renderer.render(remaining, running);
     };
 
     await processTime();
@@ -54,54 +61,3 @@ export default async () => {
         setInterval(processTime, 60000);
     }
 };
-
-function display(remaining, running) {
-    const exact: string = moment().add(remaining).format('HH:mm');
-    let string = `Finish: ${remaining.humanize(true)} (${exact})`;
-
-    if (running) {
-        string += ` * ${running} timer running`;
-    }
-
-    logUpdate(string);
-}
-
-function displayTable(remaining, running, currentWeek, today) {
-    const exact: string = remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm');
-    const under = remaining > 0;
-    const timeLeft: any = (under ? '' : '+') + convertTime(remaining);
-
-
-    const tableToDisplay = [
-        ['', 'Day', 'Week'],
-        ['Break' + (running === 'break' ? ' *' : ''), convertTime(today.break), convertTime(currentWeek.break)],
-        ['Work' + (running === 'work' ? ' *' : ''), convertTime(today.work), convertTime(currentWeek.work)],
-        [under ? 'Left' : 'Over', under ? timeLeft : timeLeft.green, exact]
-    ];
-    const options = {
-        drawHorizontalLine: (index, size) => {
-            return index < 2 || index > size - 2;
-        },
-        columns: {
-            1: {
-                alignment: 'right'
-            },
-            2: {
-                alignment: 'right'
-            }
-        }
-    };
-
-    logUpdate(table.table(tableToDisplay, options));
-}
-
-function convertTime(inp: Duration) {
-    const hours = Math.floor(Math.abs(inp.asHours()));
-    let output = '';
-
-    if (hours > 0) {
-        output = `${hours}h `;
-    }
-
-    return `${output}${Math.abs(inp.minutes())}m`;
-}

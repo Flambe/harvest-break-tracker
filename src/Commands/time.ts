@@ -35,11 +35,7 @@ export default async () => {
 
         spinner.stop();
 
-        let displayAsTable = true;
-
-        if (!program.table && (program.simple || Config.get('display') === 'simple')) {
-            displayAsTable = false;
-        }
+        const displayAsTable = (program.display || Config.get('display')) === 'table';
 
         let renderer: Renderer;
 

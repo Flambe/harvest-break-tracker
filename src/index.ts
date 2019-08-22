@@ -10,8 +10,7 @@ import startup from './Utils/startup';
     program.version(require('../package.json').version)
         .option('-w, --weeks <n>', 'Weeks to include', parseInt, 0)
         .option('-r, --refresh', 'Refresh every minute')
-        .option('-t, --table', 'Display the table view')
-        .option('-s, --simple', 'Display the simple view')
+        .option('-d, --display <table|simple>', 'Render your time in table or simple view')
         .action(time);
 
     program.parse(process.argv);

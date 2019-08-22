@@ -38,11 +38,7 @@ export default async () => {
 
         spinner.stop();
 
-        let displayAsTable = true;
-
-        if (!program.table && (program.simple || Config.get('display') === 'simple')) {
-            displayAsTable = false;
-        }
+        const displayAsTable = (program.display || Config.get('display')) === 'table';
 
         let renderer: Renderer;
 
@@ -57,7 +53,7 @@ export default async () => {
 
         renderer.render(remaining, running);
 
-		if (program.bottom) {
+		if (program.tray) {
 			if (systray) {
 				systray.sendAction({
 					type: 'update-menu',
@@ -89,7 +85,7 @@ export default async () => {
 
     await processTime();
 
-	if (program.refresh || program.bottom) {
-        setInterval(processTime, 60000);
+	if (program.refresh || program.tray) {
+        setInterval(processTime, 60_000);
     }
 };

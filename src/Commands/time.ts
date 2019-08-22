@@ -7,11 +7,14 @@ import Config from '../Utils/Config';
 import Renderer from '../Renderers/Renderer';
 import SimpleRenderer from '../Renderers/SimpleRenderer';
 import TableRenderer from '../Renderers/TableRenderer';
+import SysTray from 'systray';
+import icon from './icon';
 
 require('colors');
 
 export default async () => {
     const spinner = ora().start();
+	let systray: SysTray;
 
     const processTime = async () => {
         let weeksToProcess: number = program.weeks;
@@ -53,11 +56,40 @@ export default async () => {
         }
 
         renderer.render(remaining, running);
+
+		if (program.bottom) {
+			if (systray) {
+				systray.sendAction({
+					type: 'update-menu',
+					menu: {
+						icon,
+						title: ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm')),
+						tooltip: '',
+						items: [],
+					},
+					seq_id: 1,
+				});
+			} else {
+				systray = new SysTray({
+					menu: {
+						icon,
+						title: ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm')),
+						tooltip: 'Tisdfsdfsps',
+						items: [{
+							title: 'stop',
+							tooltip: 'stop timer',
+							checked: false,
+							enabled: true
+						}]
+					},
+				});
+			}
+		}
     };
 
     await processTime();
 
-    if (program.refresh) {
+	if (program.refresh || program.bottom) {
         setInterval(processTime, 60000);
     }
 };

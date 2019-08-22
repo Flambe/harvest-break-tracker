@@ -16,7 +16,7 @@ export default class TableRenderer implements Renderer {
         this._lastDay = value;
     }
 
-    private static convertTime(inp: Duration) {
+	public static convertTime(inp: Duration) {
         const hours = Math.floor(Math.abs(inp.asHours()));
         let output = '';
 

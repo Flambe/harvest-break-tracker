@@ -12,6 +12,7 @@ import startup from './Utils/startup';
         .option('-r, --refresh', 'Refresh every minute')
         .option('-t, --table', 'Display the table view')
         .option('-s, --simple', 'Display the simple view')
+		.option('-b, --bottom')
         .action(time);
 
     program.parse(process.argv);

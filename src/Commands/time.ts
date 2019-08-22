@@ -63,7 +63,7 @@ export default async () => {
 					type: 'update-menu',
 					menu: {
 						icon,
-						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm')),
+						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm')),
 						tooltip: '',
 						items: [],
 					},
@@ -73,7 +73,7 @@ export default async () => {
 				systray = new SysTray({
 					menu: {
 						icon,
-						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm')),
+						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm')),
 						tooltip: 'Tisdfsdfsps',
 						items: [{
 							title: 'stop',

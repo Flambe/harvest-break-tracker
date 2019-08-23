@@ -7,7 +7,7 @@ import Config from '../Utils/Config';
 import Renderer from '../Renderers/Renderer';
 import SimpleRenderer from '../Renderers/SimpleRenderer';
 import TableRenderer from '../Renderers/TableRenderer';
-import SysTray from 'systray';
+import SysTray, {Menu} from 'systray';
 import icon from './icon';
 
 require('colors');
@@ -54,30 +54,39 @@ export default async () => {
         renderer.render(remaining, running);
 
 		if (program.tray) {
+		    const title: string = ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm'));
+		    const menu: Menu = {
+                icon,
+                title,
+                tooltip: 'What the hell does this do?',
+                items: [{
+                    title: 'stop',
+                    tooltip: 'stop timer',
+                    checked: false,
+                    enabled: true
+                }]
+		    };
+
 			if (systray) {
 				systray.sendAction({
 					type: 'update-menu',
-					menu: {
-						icon,
-						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm')),
-						tooltip: '',
-						items: [],
-					},
+					menu,
 					seq_id: 1,
 				});
+
+				systray.onClick(action => {
+                    systray.sendAction({
+                        type: 'update-item',
+
+                        item: {
+                            ...action.item,
+                            checked: !action.item.checked,
+                        },
+                        seq_id: action.seq_id,
+                    })                });
 			} else {
 				systray = new SysTray({
-					menu: {
-						icon,
-						title: ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm')),
-						tooltip: 'Tisdfsdfsps',
-						items: [{
-							title: 'stop',
-							tooltip: 'stop timer',
-							checked: false,
-							enabled: true
-						}]
-					},
+					menu
 				});
 			}
 		}

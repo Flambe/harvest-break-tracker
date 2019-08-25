@@ -7,11 +7,13 @@ import Config from '../Utils/Config';
 import Renderer from '../Renderers/Renderer';
 import SimpleRenderer from '../Renderers/SimpleRenderer';
 import TableRenderer from '../Renderers/TableRenderer';
+import Systray from '../Utils/Systray';
 
 require('colors');
 
 export default async () => {
     const spinner = ora().start();
+	const systray: Systray = program.tray && new Systray();
 
     const processTime = async () => {
         let weeksToProcess: number = program.weeks;
@@ -49,11 +51,15 @@ export default async () => {
         }
 
         renderer.render(remaining, running);
+
+		if (program.tray) {
+			systray.remaining = remaining;
+		}
     };
 
     await processTime();
 
-    if (program.refresh) {
-        setInterval(processTime, 60000);
+	if (program.refresh || program.tray) {
+        setInterval(processTime, 60_000);
     }
 };

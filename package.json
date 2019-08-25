@@ -8,7 +8,7 @@
     "bugs": "https://github.com/Flambe/harvest-break-tracker/issues",
     "scripts": {
         "start": "ts-node src/index.ts",
-        "build": "tsc --rootDir src --outDir dist",
+        "build": "tsc --skipLibCheck --rootDir src --outDir dist",
         "pub": "npm version patch && npm run build && npm publish --access public"
     },
     "author": "Steve Axtmann",
@@ -27,6 +27,7 @@
         "moment": "^2.22.2",
         "ora": "^3.0.0",
         "request": "^2.87.0",
+        "systray": "^1.0.5",
         "table": "^4.0.2",
         "ts-node": "^7.0.0",
         "typescript": "^3.0.1",

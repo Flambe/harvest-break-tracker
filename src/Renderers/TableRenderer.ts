@@ -1,7 +1,8 @@
 import Renderer from './Renderer';
-import moment, {Duration} from 'moment';
+import moment from 'moment';
 import logUpdate from 'log-update';
 import * as table from 'table';
+import {durationToHuman} from '../Utils/Utils';
 
 export default class TableRenderer implements Renderer {
     private _times;
@@ -16,27 +17,15 @@ export default class TableRenderer implements Renderer {
         this._lastDay = value;
     }
 
-    private static convertTime(inp: Duration) {
-        const hours = Math.floor(Math.abs(inp.asHours()));
-        let output = '';
-
-        if (hours > 0) {
-            output = `${hours}h `;
-        }
-
-        return `${output}${Math.abs(inp.minutes())}m`;
-    }
-
     render(remaining, running: 'work' | 'break' | false): void {
         const exact: string = remaining.asMinutes() <= -30 ? (<any>'go home').rainbow : moment().add(remaining).format('HH:mm');
         const under = remaining > 0;
-        const timeLeft: any = (under ? '' : '+') + TableRenderer.convertTime(remaining);
-
+		const timeLeft: any = (under ? '' : '+') + durationToHuman(remaining);
 
         const weekTable = [
             ['', 'Day', 'Week'],
-            ['Break' + (running === 'break' ? ' *' : ''), TableRenderer.convertTime(this._lastDay.break), TableRenderer.convertTime(this._times.break)],
-            ['Work' + (running === 'work' ? ' *' : ''), TableRenderer.convertTime(this._lastDay.work), TableRenderer.convertTime(this._times.work)],
+			['Break' + (running === 'break' ? ' *' : ''), durationToHuman(this._lastDay.break), durationToHuman(this._times.break)],
+			['Work' + (running === 'work' ? ' *' : ''), durationToHuman(this._lastDay.work), durationToHuman(this._times.work)],
         ];
         const todayTable = [
             [under ? 'Left' : 'Over', under ? timeLeft : timeLeft.green, exact]

@@ -1,6 +1,6 @@
 {
     "name": "@steveaxtmann/harvest-break-tracker",
-    "version": "0.0.15",
+    "version": "0.1.0",
     "description": "See harvest time for the week without breaks",
     "main": "src/index",
     "homepage": "https://github.com/Flambe/harvest-break-tracker",
@@ -9,10 +9,10 @@
     "scripts": {
         "start": "ts-node src/index.ts",
         "build": "tsc --skipLibCheck --rootDir src --outDir dist",
-      "pub": "npm run build && npm publish --access public",
-      "pub:patch": "npm version patch && npm run pub",
-      "pub:minor": "npm version minor && npm run pub",
-      "pub:major": "npm version major && npm run pub"
+        "pub": "npm run build && npm publish --access public",
+        "pub:patch": "npm version patch && npm run pub",
+        "pub:minor": "npm version minor && npm run pub",
+        "pub:major": "npm version major && npm run pub"
     },
     "author": "Steve Axtmann",
     "license": "ISC",

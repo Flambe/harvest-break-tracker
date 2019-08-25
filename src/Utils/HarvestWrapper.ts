@@ -1,6 +1,6 @@
 import Harvest from 'harvest-v2';
 import * as moment from 'moment';
-import Utils from './Utils';
+import {isBreak} from './Utils';
 
 export type HarvestConfig = { account_ID: number, access_token: string, user_agent: string };
 
@@ -32,7 +32,7 @@ export default class HarvestWrapper {
         }
 
 
-        return Utils.isBreak(running.time_entries[0]) ? 'break' : 'work';
+		return isBreak(running.time_entries[0]) ? 'break' : 'work';
     }
 
     private static async getUserId() {

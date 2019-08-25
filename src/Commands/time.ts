@@ -7,14 +7,13 @@ import Config from '../Utils/Config';
 import Renderer from '../Renderers/Renderer';
 import SimpleRenderer from '../Renderers/SimpleRenderer';
 import TableRenderer from '../Renderers/TableRenderer';
-import SysTray, {Menu} from 'systray';
-import icon from './icon';
+import Systray from '../Utils/Systray';
 
 require('colors');
 
 export default async () => {
     const spinner = ora().start();
-	let systray: SysTray;
+	const systray: Systray = program.tray && new Systray();
 
     const processTime = async () => {
         let weeksToProcess: number = program.weeks;
@@ -54,41 +53,7 @@ export default async () => {
         renderer.render(remaining, running);
 
 		if (program.tray) {
-		    const title: string = ' ' + ((remaining as any) > 0 ? '' : '+') + TableRenderer.convertTime(remaining) + ' | ' + (remaining.asMinutes() <= -30 ? 'go home' : moment().add(remaining).format('HH:mm'));
-		    const menu: Menu = {
-                icon,
-                title,
-                tooltip: 'What the hell does this do?',
-                items: [{
-                    title: 'stop',
-                    tooltip: 'stop timer',
-                    checked: false,
-                    enabled: true
-                }]
-		    };
-
-			if (systray) {
-				systray.sendAction({
-					type: 'update-menu',
-					menu,
-					seq_id: 1,
-				});
-
-				systray.onClick(action => {
-                    systray.sendAction({
-                        type: 'update-item',
-
-                        item: {
-                            ...action.item,
-                            checked: !action.item.checked,
-                        },
-                        seq_id: action.seq_id,
-                    })                });
-			} else {
-				systray = new SysTray({
-					menu
-				});
-			}
+			systray.remaining = remaining;
 		}
     };
 

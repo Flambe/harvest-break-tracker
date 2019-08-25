@@ -34,3 +34,7 @@ If ```table``` mode:
 
 * The bottom row will include all weeks specified with ```-w```
 * ```*``` on a row indicates that a timer for that field is running
+
+#### Show remaining time in the system tray
+
+```-t``` or ```--tray``` shows the remaining time in the system tray. The cmd process will then auto update, like with ```-r```

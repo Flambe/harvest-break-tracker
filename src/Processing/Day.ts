@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 import {Duration} from 'moment';
-import Utils from '../Utils/Utils';
+import {isBreak} from '../Utils/Utils';
 
 export default class Day {
     private _break: Duration = moment.duration(0, 'hours');
@@ -16,7 +16,7 @@ export default class Day {
     }
 
     public addEntry(time: any): void {
-        if (Utils.isBreak(time)) {
+		if (isBreak(time)) {
             this.incrementBreak(time.hours);
         } else {
             this.incrementWork(time.hours);

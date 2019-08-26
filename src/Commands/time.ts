@@ -15,7 +15,15 @@ export default async () => {
     const spinner = ora().start();
 	const systray: Systray = program.tray && new Systray();
 
-    const processTime = async () => {
+    if (program.tray) {
+        systray.title = 'starting...';
+    }
+
+    const processTime = async (manual: boolean = false) => {
+        if (manual && program.tray) {
+            systray.title = 'refreshing...';
+        }
+
         let weeksToProcess: number = program.weeks;
         const weeks: Week[] = [];
 
@@ -62,5 +70,9 @@ export default async () => {
 
 	if (program.refresh || program.tray) {
         setInterval(processTime, 60_000);
+    }
+
+    if (program.tray) {
+        systray.refresh = processTime;
     }
 };

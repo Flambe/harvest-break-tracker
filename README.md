@@ -38,3 +38,6 @@ If ```table``` mode:
 #### Show remaining time in the system tray
 
 ```-t``` or ```--tray``` shows the remaining time in the system tray. The cmd process will then auto update, like with ```-r```
+
+* A ```*``` prefix indicates that a work timer is running
+* A ```B``` prefix indicates that a break timer is running

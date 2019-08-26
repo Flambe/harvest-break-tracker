@@ -53,6 +53,7 @@ export default async () => {
         renderer.render(remaining, running);
 
 		if (program.tray) {
+            systray.running = running;
 			systray.remaining = remaining;
 		}
     };

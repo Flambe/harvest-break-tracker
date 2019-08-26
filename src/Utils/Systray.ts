@@ -5,6 +5,7 @@ import {durationToHuman} from './Utils';
 
 export default class Systray {
 	private systray: SysTray | null = null;
+	private _running: string = '';
 
 	private menu: Menu = {
 		icon,
@@ -32,8 +33,22 @@ export default class Systray {
 		}
 	}
 
+	public set running(running: 'work' | 'break' | false) {
+		if ('work' === running) {
+			this._running = ' *';
+			return;
+		}
+
+		if ('break' === running) {
+			this._running = ' B';
+			return;
+		}
+
+		this._running = '';
+	}
+
 	public set remaining(remaining: Duration) {
-		let title = (remaining as any) <= 0 ? ' +' : ' ';
+		let title = this._running + ((remaining as any) <= 0 ? ' +' : ' ');
 
 		title += durationToHuman(remaining) + ' | ';
 

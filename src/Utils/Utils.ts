@@ -2,7 +2,8 @@ import {Duration} from 'moment';
 
 const breaks = {
 	Break: null,
-	'Non-Project Time': ['German']
+    'Non-Project Time': ['German'],
+    'Human Resource': ['Break', 'German'],
 };
 
 export function isBreak(entry): boolean {

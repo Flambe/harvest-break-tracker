@@ -8,12 +8,25 @@ import Renderer from '../Renderers/Renderer';
 import SimpleRenderer from '../Renderers/SimpleRenderer';
 import TableRenderer from '../Renderers/TableRenderer';
 import Systray from '../Utils/Systray';
+// @ts-ignore
+import {MultiBar} from 'cli-progress';
 
 require('colors');
 
 export default async () => {
+    let firstRun: boolean = true;
+    let weeksToProcess: number = program.weeks;
+    const total = weeksToProcess;
     const spinner = ora().start();
 	const systray: Systray = program.tray && new Systray();
+    const multibar: MultiBar = new MultiBar({
+        clearOnComplete: true,
+        hideCursor: true,
+        format: '[{bar}] {value}/{total} weeks processed (ETA: {eta}s)',
+        barIncompleteChar: ' ',
+        barCompleteChar: '█',
+        barsize: total < 40 ? total : 40,
+    });
 
     if (program.tray) {
         systray.title = 'starting...';
@@ -24,7 +37,6 @@ export default async () => {
             systray.title = 'refreshing...';
         }
 
-        let weeksToProcess: number = program.weeks;
         const weeks: Week[] = [];
 
         while (weeksToProcess >= 0) {
@@ -35,10 +47,24 @@ export default async () => {
         }
 
         const remaining: moment.Duration = moment.duration();
+        let bar: any;
+
+        if (firstRun && total > 0) {
+            spinner.stop();
+            bar = multibar.create(total + 1, 0);
+        }
 
         for (const key in weeks) {
             const week: Week = weeks[key];
             remaining.add(await week.getTimeLeft());
+
+            if (firstRun && total > 0) {
+                bar.increment(1);
+            }
+        }
+
+        if (firstRun && total > 0) {
+            multibar.stop();
         }
 
         const running = await HarvestWrapper.getRunning();
@@ -64,6 +90,8 @@ export default async () => {
             systray.running = running;
 			systray.remaining = remaining;
 		}
+
+        firstRun = false;
     };
 
     await processTime();

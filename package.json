@@ -17,9 +17,7 @@
     "author": "Steve Axtmann",
     "license": "ISC",
     "dependencies": {
-        "@types/colors": "^1.2.1",
-        "@types/dotenv": "^4.0.3",
-        "@types/ora": "^1.3.4",
+        "cli-progress": "^3.3.0",
         "colors": "^1.1.2",
         "commander": "^2.17.0",
         "data-store": "^3.0.3",
@@ -41,5 +39,11 @@
     },
     "bin": {
         "hbt": "./dist/index.js"
+    },
+    "devDependencies": {
+        "@types/cli-progress": "^1.8.1",
+        "@types/colors": "^1.2.1",
+        "@types/dotenv": "^4.0.3",
+        "@types/ora": "^1.3.5"
     }
 }

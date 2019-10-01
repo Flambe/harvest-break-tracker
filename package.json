@@ -1,6 +1,6 @@
 {
     "name": "@steveaxtmann/harvest-break-tracker",
-    "version": "0.1.2",
+    "version": "0.2.0",
     "description": "See harvest time for the week without breaks",
     "main": "src/index",
     "homepage": "https://github.com/Flambe/harvest-break-tracker",
